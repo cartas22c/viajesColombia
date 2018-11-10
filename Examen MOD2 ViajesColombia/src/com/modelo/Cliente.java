@@ -10,15 +10,12 @@ public class Cliente {
 	private String segundoApellido;
 	private Date fechaEntrada;
 	private Date fechaSalida;
-	private Sexo sexo;
+	private String sexo;
 	private int idCT;
 	
-	enum Sexo{
-		Hombre, Mujer
-	}
-
+	
 	public Cliente(int idCliente, String nombre, String primerApellido, String segundoApellido, Date fechaEntrada,
-			Date fechaSalida, Sexo sexo, int idCT) {
+			Date fechaSalida, String sexo, int idCT) {
 		super();
 		this.idCliente = idCliente;
 		this.nombre = nombre;
@@ -78,11 +75,11 @@ public class Cliente {
 		this.fechaSalida = fechaSalida;
 	}
 
-	public Sexo getSexo() {
+	public String getSexo() {
 		return sexo;
 	}
 
-	public void setSexo(Sexo sexo) {
+	public void setSexo(String sexo) {
 		this.sexo = sexo;
 	}
 

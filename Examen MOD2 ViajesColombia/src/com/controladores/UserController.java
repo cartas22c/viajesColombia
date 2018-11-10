@@ -59,10 +59,10 @@ public class UserController extends HttpServlet {
 				HttpSession session = request.getSession();
 				session.setAttribute("currentUser", m.getUsuario());
 				// Envio al controlador Principal para validar el nivel de user
-				RequestDispatcher view = request.getRequestDispatcher("prueba.html");
-				view.forward(request, response);
-			}
+				response.sendRedirect("ReservasController");
+ 			}
 			else {
+				//Enviamos a la pagina de inicio
 				RequestDispatcher view = request.getRequestDispatcher("index.html");
 				view.forward(request, response);
 			}

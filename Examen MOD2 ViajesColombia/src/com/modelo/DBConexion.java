@@ -95,7 +95,23 @@ public class DBConexion {
 	}
 	
 	
-	
+	public 	ResultSet selectClientes() throws SQLException{
+		ResultSet data = null;
+		String query= "";
+		query = "SELECT * FROM viajescolombia.clientes";
+		java.sql.Statement stmt;
+		
+		
+		try {
+			conn = getConexion();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		stmt =  conn.createStatement();
+		data = stmt.executeQuery(query);
+		return data;
+	}
 	
 	// Metodo inserta un nuevo estudiante.
 	//// pre: el telefono se encuentra en una tabla diferente -> MARCO TRANSACCION {ATOMICO}
