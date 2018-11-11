@@ -1,0 +1,5 @@
+@charset "ISO-8859-1";
+
+#contenedorMascotas, #descripcionMascota  {
+    display: none;
+}

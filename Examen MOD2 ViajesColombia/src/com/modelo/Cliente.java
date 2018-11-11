@@ -1,6 +1,7 @@
 package com.modelo;
 
 import java.util.Date;
+import java.util.List;
 
 public class Cliente {
 
@@ -12,6 +13,9 @@ public class Cliente {
 	private Date fechaSalida;
 	private String sexo;
 	private String centro;
+	private List<String> email;
+	private List<String> mascotas;
+	private List<String> telefonos;
 	
 	
 	public Cliente(int idCliente, String nombre, String primerApellido, String segundoApellido, Date fechaEntrada,
@@ -89,6 +93,31 @@ public class Cliente {
 
 	public void setCentro(String centro) {
 		this.centro = centro;
+	}
+
+	public List<String> getEmail() {
+		return email;
+	}
+
+	public void setEmail(List<String> email) {
+		this.email = email;
+	}
+
+	public List<String> getMascotas() {
+		return mascotas;
+	}
+
+	public void setMascotas(List<String> mascotas) {
+		this.mascotas = mascotas;
+	}
+
+	public List<String> getTelefonos() {
+		
+		return telefonos;
+	}
+
+	public void setTelefonos(List<String> telefonos) {
+		this.telefonos = telefonos;
 	}
 
  

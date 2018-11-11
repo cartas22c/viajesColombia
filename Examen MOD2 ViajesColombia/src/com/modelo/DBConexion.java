@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 import com.mysql.jdbc.PreparedStatement;
@@ -38,28 +39,110 @@ public class DBConexion {
 		return conn;
 	}
 
-	
+
 	// INSERT PERSONA
-	
-/*	public void insertPersona(Persona p) throws SQLException {
+
+	public void insertCliente(Cliente cliente) throws SQLException {
 		int result = 0;
 		String query = "";
-		query = "INSERT INTO `actividad11`.`personas` (`nombre`, `apellidos`, `edad`) VALUES (?, ?, ?)";
-		java.sql.PreparedStatement ptmt;
+		String queryCliente = "";
+		String qInsertTelefono="";
+		String qInsertEmail = "";
+		String qInsertMascota = "";
+		long lastIDStudent = 0;
+		queryCliente = "INSERT INTO `viajescolombia`.`clientes` "
+				+ "(`nombre`, `primerApellido`, `segundoApellido`, `fechaEntrada`, `fechaSalida`, `sexo`, `idCT`) "
+				+ "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+		qInsertTelefono = "INSERT INTO `viajescolombia`.`telefonos` (`numero`, `idtipo`, `idcliente`) VALUES (?, ?, ?)";
 		
+		qInsertEmail = "INSERT INTO `viajescolombia`.`correos` (`correo`, `idcliente`) VALUES (?, ?)";
+		
+		qInsertMascota = "INSERT INTO `viajescolombia`.`correos` (`descripcion`, `idcliente`) VALUES (?, ?)";
+
+		
+		java.sql.PreparedStatement ptmt;
+		java.sql.PreparedStatement ptmtphone;
+		java.sql.PreparedStatement ptmtmascotas;
+		java.sql.PreparedStatement ptmtemail;
+
+
 		try {
 			conn = getConexion();
 			try {
 				// ----> Comienza la TRANSACCION
 				conn.setAutoCommit(false);
-				ptmt =  conn.prepareStatement(query);
+				ptmt =  conn.prepareStatement(queryCliente,Statement.RETURN_GENERATED_KEYS);
 				
-				ptmt.setString(1, p.getNombre());
-				ptmt.setString(2, p.getApellidos());
-				ptmt.setInt(3, p.getEdad());
+
+				ptmt.setString(1, cliente.getNombre());
+				ptmt.setString(2, cliente.getPrimerApellido());
+				ptmt.setString(3, cliente.getSegundoApellido());
+				java.sql.Date sqlEntrytDate = new java.sql.Date(cliente.getFechaEntrada().getTime());
+				java.sql.Date sqlOurtDate = new java.sql.Date(cliente.getFechaSalida().getTime());
+				ptmt.setDate(4, sqlEntrytDate);
+				ptmt.setDate(5, sqlOurtDate);
+				ptmt.setString(6, cliente.getSexo());
+				ResultSet data = null;
+				data = selectCT(cliente.getCentro());
+				if(data.next()) {
+				 ptmt.setInt(7, data.getInt(1));
+				}			
+				
 				
 				result = ptmt.executeUpdate();
-				System.out.println(result +" " + "filas fueron afectadas");
+				System.out.println(result + "filas fueron afectadas");
+				if(result>0) {
+					//Recuperamos el ID insertado
+					ResultSet key = ptmt.getGeneratedKeys();
+					if(key.next()) {
+						lastIDStudent =  key.getLong(1);  // Columna ID
+					}
+				}
+				 
+				
+				
+				
+				//Emails
+				ptmtemail =  conn.prepareStatement(qInsertEmail);
+				for(String email : cliente.getEmail()) {
+					ptmtemail.setString(1,email);
+					ptmtemail.setInt(2,(int)lastIDStudent);
+					result = ptmtemail.executeUpdate();
+					System.out.println(result + "filas fueron afectadas");
+
+					// Insert en la tabla TELEFONO
+
+				} // fin for
+				
+				//Mascotas
+				ptmtmascotas =  conn.prepareStatement(qInsertMascota);
+				for(String mascota : cliente.getMascotas()) {
+					ptmtmascotas.setString(1,mascota);
+					ptmtmascotas.setInt(2,(int)lastIDStudent);
+ 					result = ptmtmascotas.executeUpdate();
+					System.out.println(result + "filas fueron afectadas");
+
+					// Insert en la tabla TELEFONO
+
+				} // fin for
+				
+				// Telefonos
+				ptmtphone =  conn.prepareStatement(qInsertTelefono);
+				for(String phone : cliente.getTelefonos()) {
+					ptmtphone.setString(1,phone);
+					ptmtphone.setInt(2,1);
+					ptmtphone.setInt(3,(int)lastIDStudent);
+
+					result = ptmtphone.executeUpdate();
+					System.out.println(result + "filas fueron afectadas");
+
+					// Insert en la tabla TELEFONO
+
+				} // fin for
+				
+				
+				
 				conn.commit();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -68,23 +151,22 @@ public class DBConexion {
 			} finally {
 				conn.setAutoCommit(true);
 			}		
-			
+
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-	}*/
-	///////////// ----> Fin del INSERT
-	
-	
-	
-	
+
+	}
+
+
+
+
 	public 	ResultSet selectUsuario(String usuario, String password) throws ClassNotFoundException, SQLException {
 		ResultSet data = null;
 		String query= "";
 		query = "SELECT * FROM usuarios WHERE login = ? AND password = ? ";
-		
+
 		java.sql.PreparedStatement ptm;
 		conn = getConexion();
 		ptm =  conn.prepareStatement(query);
@@ -93,29 +175,40 @@ public class DBConexion {
 		data = ptm.executeQuery();
 		return data;
 	}
-	
+
 	public 	ResultSet selectCT(int idCT) throws ClassNotFoundException, SQLException {
 		ResultSet data = null;
 		String query= "";
 		query = "SELECT nombre FROM centrosturisticos WHERE idCT = ? ";
-		
+
 		java.sql.PreparedStatement ptm;
 		conn = getConexion();
 		ptm =  conn.prepareStatement(query);
 		ptm.setInt(1, idCT);
- 		data = ptm.executeQuery();
+		data = ptm.executeQuery();
 		return data;
 	}
-	
-	
-	
-	public 	ResultSet selectEstudiantes() throws SQLException{
+
+	public 	ResultSet selectCT(String nombre) throws ClassNotFoundException, SQLException {
+		ResultSet data = null;
+		String query= "";
+		query = "SELECT idCT FROM centrosturisticos WHERE nombre = ? ";
+
+		java.sql.PreparedStatement ptm;
+		conn = getConexion();
+		ptm =  conn.prepareStatement(query);
+		ptm.setString(1, nombre);
+		data = ptm.executeQuery();
+		return data;
+	}
+
+	public 	ResultSet selectClientes() throws SQLException{
 		ResultSet data = null;
 		String query= "";
 		query = "SELECT * FROM viajescolombia.clientes";
 		java.sql.Statement stmt;
-		
-		
+
+
 		try {
 			conn = getConexion();
 		} catch (ClassNotFoundException e) {
@@ -126,14 +219,30 @@ public class DBConexion {
 		data = stmt.executeQuery(query);
 		return data;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+	public 	ResultSet selectCentros() throws SQLException{
+		ResultSet data = null;
+		String query= "";
+		query = "SELECT * FROM centrosturisticos";
+		java.sql.Statement stmt;
+
+		try {
+			conn = getConexion();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		stmt =  conn.createStatement();
+		data = stmt.executeQuery(query);
+		return data;
+	}
+
+
+
+
+
+
 	// Metodo inserta un nuevo estudiante.
 	//// pre: el telefono se encuentra en una tabla diferente -> MARCO TRANSACCION {ATOMICO}
 	/*public void insertNewStudent(Estudiante e) throws SQLException {
@@ -144,8 +253,8 @@ public class DBConexion {
 		String qInsertStudent= "";
 		qInsertStudent="INSERT INTO `academia`.`estudiantes` (`nombre`, `primer apellido`, `segundo apellido`,"
 				+ "`fecha de alta`, `total de asignaturas`, `documento de identidad`) VALUES (?, ?, ?, ?, ? , ?)";
-		*//**Los parametros no se pillan tal cual del metodo si no que se asignan en la siguiente linea de codigo
-		 * *//*
+	 *//**Los parametros no se pillan tal cual del metodo si no que se asignan en la siguiente linea de codigo
+	 * *//*
 		String qInsertTelefono= "";
 		qInsertTelefono = "INSERT INTO `academia`.`telefonos` (`idEstudiante`, `numero`, `idTipo`) VALUES (?, ?, ?)";
 
@@ -178,8 +287,8 @@ public class DBConexion {
 						lastIDStudent =  key.getLong(1);  // Columna ID
 					}
 				}
-				
-				
+
+
 				ptmtphone =  conn.prepareStatement(qInsertTelefono);
 				for(String phone : e.getTelefonos()) {
 					ptmtphone.setInt(1,(int)lastIDStudent);
@@ -206,15 +315,15 @@ public class DBConexion {
 			e1.printStackTrace();}
 
 	} // Fin insert!
-	
-	
+
+
 	public 	ResultSet selectEstudiantes() throws SQLException{
 		ResultSet data = null;
 		String query= "";
 		query = "SELECT * FROM academia.estudiantes";
 		java.sql.Statement stmt;
-		
-		
+
+
 		try {
 			conn = getConexion();
 		} catch (ClassNotFoundException e) {

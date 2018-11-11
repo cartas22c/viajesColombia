@@ -21,6 +21,8 @@ public class Modelo {
 	private Usuario usuario;
 	private List<Cliente> clientes ;
 	private CentroTuristico ct;
+	private List<CentroTuristico> centros;
+	private Cliente cliente;
 	
     public Modelo() {
         // TODO Auto-generated constructor stub
@@ -57,7 +59,7 @@ public class Modelo {
 	public List<Cliente> getClientes() throws SQLException, ClassNotFoundException {
 		ResultSet data;
 		DBConexion dbConexion = new DBConexion("scartas", "Temp2018$$");
-		data = dbConexion.selectEstudiantes();
+		data = dbConexion.selectClientes();
 		clientes  = new ArrayList<>();
 		while(data.next()) {
 			ResultSet ctaux = dbConexion.selectCT(data.getInt(8));
@@ -76,6 +78,27 @@ public class Modelo {
 	
 	
 
+	public List<CentroTuristico> getCentros() throws SQLException {
+		
+		ResultSet data;
+		DBConexion dbConexion = new DBConexion("scartas", "Temp2018$$");
+		data = dbConexion.selectCentros();
+		centros  = new ArrayList<>();
+		while(data.next()) {
+			int id = data.getInt(1);
+			String nombre = data.getString(2);
+			centros.add(new CentroTuristico(id,nombre));
+		}
+		
+		return centros;
+	}
+
+
+	public void setCentros(List<CentroTuristico> centros) {
+		this.centros = centros;
+	}
+
+
 	public void setClientes(List<Cliente> clientes) {
 		this.clientes = clientes;
 	}
@@ -86,6 +109,17 @@ public class Modelo {
 
 	public void setCt(CentroTuristico ct) {
 		this.ct = ct;
+	}
+
+
+	public Cliente getCliente() {
+		return cliente;
+	}
+
+
+	public void setCliente(Cliente cliente) throws SQLException {
+		DBConexion myDB = new DBConexion("scartas", "Temp2018$$");
+		myDB.insertCliente(cliente);
 	}
 	
 	
