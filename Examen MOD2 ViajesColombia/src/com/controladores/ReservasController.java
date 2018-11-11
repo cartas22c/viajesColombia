@@ -40,6 +40,8 @@ public class ReservasController extends HttpServlet {
 
 		// Si es ESTANDAR
 		if(currentUser.getNivel() == 1) {
+			//Enviamos el usuario a la vista
+			request.setAttribute("usuario", currentUser);
 			request.getRequestDispatcher("/listadoReservas.jsp").forward(request, response);
 
 		}

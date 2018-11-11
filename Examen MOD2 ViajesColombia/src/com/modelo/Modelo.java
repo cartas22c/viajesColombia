@@ -2,6 +2,7 @@ package com.modelo;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.LocalBean;
@@ -19,6 +20,7 @@ public class Modelo {
      */
 	private Usuario usuario;
 	private List<Cliente> clientes ;
+	private CentroTuristico ct;
 	
     public Modelo() {
         // TODO Auto-generated constructor stub
@@ -51,20 +53,39 @@ public class Modelo {
 	}
 
 
-	public List<Cliente> getClientes() throws ClassNotFoundException, SQLException {
-		DBConexion myConexion = new DBConexion("scartas", "Temp2018$$");
-		 ResultSet data = myConexion.selectClientes();
-		
-		if(data.next()) {
-			clientes.add(new Cliente(data.getInt(1), data.getString(2), data.getString(3),
-					data.getString(4), data.getDate(5), data.getDate(6), data.getString(7), data.getInt(8)));
- 		} 
+	
+	public List<Cliente> getClientes() throws SQLException, ClassNotFoundException {
+		ResultSet data;
+		DBConexion dbConexion = new DBConexion("scartas", "Temp2018$$");
+		data = dbConexion.selectEstudiantes();
+		clientes  = new ArrayList<>();
+		while(data.next()) {
+			ResultSet ctaux = dbConexion.selectCT(data.getInt(8));
+			String nombreCT = "";
+			while(ctaux.next()) {
+				nombreCT = ctaux.getString(1);
+			}
+			clientes.add(new Cliente(data.getInt(1),
+					data.getString(2), data.getString(3), 
+					data.getString(4), data.getDate(5), 
+					data.getDate(6), data.getString(7),nombreCT));
+		}
 		return clientes;
- 	}
-
+	}
+	
+	
+	
 
 	public void setClientes(List<Cliente> clientes) {
 		this.clientes = clientes;
+	}
+
+
+	
+
+
+	public void setCt(CentroTuristico ct) {
+		this.ct = ct;
 	}
 	
 	

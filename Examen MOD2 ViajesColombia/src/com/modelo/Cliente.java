@@ -11,11 +11,11 @@ public class Cliente {
 	private Date fechaEntrada;
 	private Date fechaSalida;
 	private String sexo;
-	private int idCT;
+	private String centro;
 	
 	
 	public Cliente(int idCliente, String nombre, String primerApellido, String segundoApellido, Date fechaEntrada,
-			Date fechaSalida, String sexo, int idCT) {
+			Date fechaSalida, String sexo, String centro) {
 		super();
 		this.idCliente = idCliente;
 		this.nombre = nombre;
@@ -24,7 +24,7 @@ public class Cliente {
 		this.fechaEntrada = fechaEntrada;
 		this.fechaSalida = fechaSalida;
 		this.sexo = sexo;
-		this.idCT = idCT;
+		this.centro = centro;
 	}
 
 	public int getIdCliente() {
@@ -83,12 +83,12 @@ public class Cliente {
 		this.sexo = sexo;
 	}
 
-	public int getIdCT() {
-		return idCT;
+	public String getCentro() {
+		return centro;
 	}
 
-	public void setIdCT(int idCT) {
-		this.idCT = idCT;
+	public void setCentro(String centro) {
+		this.centro = centro;
 	}
 
  
