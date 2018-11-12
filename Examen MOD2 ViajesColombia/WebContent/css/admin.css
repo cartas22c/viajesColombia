@@ -3,3 +3,8 @@
 #contenedorMascotas, #descripcionMascota  {
     display: none;
 }
+
+
+#infoNombre,#infoApellido1,#infoApellido2, #infoFechaEntrada, #infoFechaSalida {
+    display: none;  color: #fc1751;  font-weight: bold;
+}

@@ -15,20 +15,23 @@ import javax.ejb.Stateless;
 @LocalBean
 public class Modelo {
 
-    /**
-     * Default constructor. 
-     */
+	/**
+	 * Default constructor. 
+	 */
 	private Usuario usuario;
 	private List<Cliente> clientes ;
 	private CentroTuristico ct;
 	private List<CentroTuristico> centros;
 	private Cliente cliente;
+	private Cliente clienteUpdate;
+	private Cliente clienteDelete;
+
 	
-    public Modelo() {
-        // TODO Auto-generated constructor stub
-    }
-   
-    
+	public Modelo() {
+		// TODO Auto-generated constructor stub
+	}
+
+
 	public Modelo(Usuario usuario) {
 		super();
 		this.usuario = usuario;
@@ -47,7 +50,7 @@ public class Modelo {
 		} else {
 			return null;
 		}
-		
+
 	}
 
 	public void setUsuario(Usuario usuario) {
@@ -55,7 +58,7 @@ public class Modelo {
 	}
 
 
-	
+
 	public List<Cliente> getClientes() throws SQLException, ClassNotFoundException {
 		ResultSet data;
 		DBConexion dbConexion = new DBConexion("scartas", "Temp2018$$");
@@ -74,12 +77,26 @@ public class Modelo {
 		}
 		return clientes;
 	}
-	
-	
-	
+
+	public List<Cliente> getClientes(String nombreCT) throws SQLException, ClassNotFoundException {
+		ResultSet data;
+		DBConexion dbConexion = new DBConexion("scartas", "Temp2018$$");
+		data = dbConexion.selectClientes(nombreCT);
+		clientes  = new ArrayList<>();
+		while(data.next()) {
+			clientes.add(new Cliente(data.getInt(1),
+					data.getString(2), data.getString(3), 
+					data.getString(4), data.getDate(5), 
+					data.getDate(6), data.getString(7),nombreCT));
+		}
+		return clientes;
+	}
+
+
+
 
 	public List<CentroTuristico> getCentros() throws SQLException {
-		
+
 		ResultSet data;
 		DBConexion dbConexion = new DBConexion("scartas", "Temp2018$$");
 		data = dbConexion.selectCentros();
@@ -89,9 +106,10 @@ public class Modelo {
 			String nombre = data.getString(2);
 			centros.add(new CentroTuristico(id,nombre));
 		}
-		
+
 		return centros;
 	}
+
 
 
 	public void setCentros(List<CentroTuristico> centros) {
@@ -104,7 +122,7 @@ public class Modelo {
 	}
 
 
-	
+
 
 
 	public void setCt(CentroTuristico ct) {
@@ -112,17 +130,46 @@ public class Modelo {
 	}
 
 
-	public Cliente getCliente() {
-		return cliente;
-	}
-
-
-	public void setCliente(Cliente cliente) throws SQLException {
+	public Cliente getCliente(int idCliente) throws SQLException, ClassNotFoundException {
 		DBConexion myDB = new DBConexion("scartas", "Temp2018$$");
-		myDB.insertCliente(cliente);
+		ResultSet data = myDB.selectCliente(idCliente);
+		while(data.next()) {
+			return cliente;
+		}
+		return null;
 	}
-	
-	
 
-    
+
+	public void setCliente(Cliente cliente) throws SQLException, ClassNotFoundException {
+		DBConexion myDB = new DBConexion("scartas", "Temp2018$$");
+		myDB.insertWithTransaction(cliente);
+	}
+
+
+	public Cliente getClienteUpdate() {
+		return clienteUpdate;
+	}
+
+
+	public void setClienteUpdate(Cliente clienteUpdate, int idCT) throws SQLException {
+		DBConexion myDB = new DBConexion("scartas", "Temp2018$$");
+		myDB.updateCliente(clienteUpdate.getIdCliente(), idCT);
+		this.clienteUpdate = clienteUpdate;
+	}
+
+
+	public Cliente getClienteDelete() {
+		return clienteDelete;
+	}
+
+
+	public void setClienteDelete(Cliente clienteDelete) throws SQLException {
+		DBConexion myDB = new DBConexion("scartas", "Temp2018$$");
+		myDB.deleteCliente(clienteDelete.getIdCliente());
+		this.clienteDelete = clienteDelete;
+	}
+
+
+
+
 }

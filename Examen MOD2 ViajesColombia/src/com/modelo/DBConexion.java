@@ -40,126 +40,135 @@ public class DBConexion {
 	}
 
 
-	// INSERT PERSONA
+	
+ 
 
-	public void insertCliente(Cliente cliente) throws SQLException {
-		int result = 0;
-		String query = "";
-		String queryCliente = "";
-		String qInsertTelefono="";
-		String qInsertEmail = "";
-		String qInsertMascota = "";
+	public void insertWithTransaction(Cliente cliente) throws SQLException, ClassNotFoundException{
 		long lastIDStudent = 0;
-		queryCliente = "INSERT INTO `viajescolombia`.`clientes` "
+		int result = 0;
+
+		Connection dbConnection = null;
+		java.sql.PreparedStatement preparedStatementInsertCliente = null;
+		java.sql.PreparedStatement preparedStatementInsertTelefono = null;
+		java.sql.PreparedStatement preparedStatementInsertEmail = null;
+		java.sql.PreparedStatement preparedStatementInsertMascota = null;
+
+		String queryCliente = "INSERT INTO `viajescolombia`.`clientes` "
 				+ "(`nombre`, `primerApellido`, `segundoApellido`, `fechaEntrada`, `fechaSalida`, `sexo`, `idCT`) "
-				+ "VALUES (?, ?, ?, ?, ?, ?, ?)";
+				+ "VALUES (?, ?, ?, ?, ?, ?, ?)";	
 
-		qInsertTelefono = "INSERT INTO `viajescolombia`.`telefonos` (`numero`, `idtipo`, `idcliente`) VALUES (?, ?, ?)";
+		String 	qInsertTelefono = "INSERT INTO `viajescolombia`.`telefonos` (`numero`, `idtipo`, `idcliente`) VALUES (?, ?, ?)";
+
+
+		String qInsertEmail = "INSERT INTO `viajescolombia`.`correos` (`correo`, `idcliente`) VALUES (?, ?)";
+
+
+		String qInsertMascota = "INSERT INTO `viajescolombia`.`mascotas` (`descripcion`, `idcliente`) VALUES (?, ?)";
+
 		
-		qInsertEmail = "INSERT INTO `viajescolombia`.`correos` (`correo`, `idcliente`) VALUES (?, ?)";
-		
-		qInsertMascota = "INSERT INTO `viajescolombia`.`correos` (`descripcion`, `idcliente`) VALUES (?, ?)";
-
-		
-		java.sql.PreparedStatement ptmt;
-		java.sql.PreparedStatement ptmtphone;
-		java.sql.PreparedStatement ptmtmascotas;
-		java.sql.PreparedStatement ptmtemail;
-
-
 		try {
-			conn = getConexion();
-			try {
-				// ----> Comienza la TRANSACCION
-				conn.setAutoCommit(false);
-				ptmt =  conn.prepareStatement(queryCliente,Statement.RETURN_GENERATED_KEYS);
-				
-
-				ptmt.setString(1, cliente.getNombre());
-				ptmt.setString(2, cliente.getPrimerApellido());
-				ptmt.setString(3, cliente.getSegundoApellido());
-				java.sql.Date sqlEntrytDate = new java.sql.Date(cliente.getFechaEntrada().getTime());
-				java.sql.Date sqlOurtDate = new java.sql.Date(cliente.getFechaSalida().getTime());
-				ptmt.setDate(4, sqlEntrytDate);
-				ptmt.setDate(5, sqlOurtDate);
-				ptmt.setString(6, cliente.getSexo());
-				ResultSet data = null;
-				data = selectCT(cliente.getCentro());
-				if(data.next()) {
-				 ptmt.setInt(7, data.getInt(1));
-				}			
-				
-				
-				result = ptmt.executeUpdate();
-				System.out.println(result + "filas fueron afectadas");
-				if(result>0) {
-					//Recuperamos el ID insertado
-					ResultSet key = ptmt.getGeneratedKeys();
-					if(key.next()) {
-						lastIDStudent =  key.getLong(1);  // Columna ID
-					}
-				}
-				 
-				
-				
-				
-				//Emails
-				ptmtemail =  conn.prepareStatement(qInsertEmail);
-				for(String email : cliente.getEmail()) {
-					ptmtemail.setString(1,email);
-					ptmtemail.setInt(2,(int)lastIDStudent);
-					result = ptmtemail.executeUpdate();
-					System.out.println(result + "filas fueron afectadas");
-
-					// Insert en la tabla TELEFONO
-
-				} // fin for
-				
-				//Mascotas
-				ptmtmascotas =  conn.prepareStatement(qInsertMascota);
-				for(String mascota : cliente.getMascotas()) {
-					ptmtmascotas.setString(1,mascota);
-					ptmtmascotas.setInt(2,(int)lastIDStudent);
- 					result = ptmtmascotas.executeUpdate();
-					System.out.println(result + "filas fueron afectadas");
-
-					// Insert en la tabla TELEFONO
-
-				} // fin for
-				
-				// Telefonos
-				ptmtphone =  conn.prepareStatement(qInsertTelefono);
-				for(String phone : cliente.getTelefonos()) {
-					ptmtphone.setString(1,phone);
-					ptmtphone.setInt(2,1);
-					ptmtphone.setInt(3,(int)lastIDStudent);
-
-					result = ptmtphone.executeUpdate();
-					System.out.println(result + "filas fueron afectadas");
-
-					// Insert en la tabla TELEFONO
-
-				} // fin for
-				
-				
-				
-				conn.commit();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				conn.rollback();
-				e.printStackTrace();
-			} finally {
-				conn.setAutoCommit(true);
-			}		
-
+		dbConnection = getConexion();
+		dbConnection.setAutoCommit(false);
+		
+		preparedStatementInsertCliente = dbConnection.prepareStatement(queryCliente,Statement.RETURN_GENERATED_KEYS);
+		preparedStatementInsertCliente.setString(1, cliente.getNombre());
+		preparedStatementInsertCliente.setString(2, cliente.getPrimerApellido());
+		preparedStatementInsertCliente.setString(3, cliente.getSegundoApellido());
+		java.sql.Date sqlEntrytDate = new java.sql.Date(cliente.getFechaEntrada().getTime());
+		java.sql.Date sqlOurtDate = new java.sql.Date(cliente.getFechaSalida().getTime());
+		preparedStatementInsertCliente.setDate(4, sqlEntrytDate);
+		preparedStatementInsertCliente.setDate(5, sqlOurtDate);
+		preparedStatementInsertCliente.setString(6, cliente.getSexo());
+		ResultSet data = null;
+		try {
+			data = selectCT(cliente.getCentro());
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		if(data.next()) {
+			preparedStatementInsertCliente.setInt(7, data.getInt(1));
+		}	
+		
+		result = preparedStatementInsertCliente.executeUpdate();
+ 		
+		if(result>0) {
+			//Recuperamos el ID insertado
+			ResultSet key = preparedStatementInsertCliente.getGeneratedKeys();
+			if(key.next()) {
+				lastIDStudent =  key.getLong(1);  // Columna ID
+			}
+		}
+		
+		
+		preparedStatementInsertTelefono = dbConnection.prepareStatement(qInsertTelefono);
+		for(String phone : cliente.getTelefonos()) {
+			preparedStatementInsertTelefono.setString(1,phone);
+			preparedStatementInsertTelefono.setInt(2,1);
+			preparedStatementInsertTelefono.setInt(3,(int)lastIDStudent);
+			if(preparedStatementInsertTelefono.executeUpdate() > 0) {
+				System.out.println(phone + "filas fueron afectadas TELEFONO");
+			}
 
+		}
+ 
+		
+		preparedStatementInsertEmail = dbConnection.prepareStatement(qInsertEmail);
+
+		for(String email : cliente.getEmail()) {
+			preparedStatementInsertEmail.setString(1,email);
+			preparedStatementInsertEmail.setInt(2,(int) lastIDStudent);
+			if(preparedStatementInsertEmail.executeUpdate() > 0) {
+				System.out.println(email + "filas fueron afectadas EMAIL");
+			}
+
+		}
+
+		preparedStatementInsertMascota = dbConnection.prepareStatement(qInsertMascota);
+
+		for(String mascota : cliente.getMascotas()) {
+			preparedStatementInsertMascota.setString(1,mascota);
+			preparedStatementInsertMascota.setInt(2,(int)lastIDStudent);
+			if(preparedStatementInsertMascota.executeUpdate() > 0) {
+				System.out.println(mascota + "filas fueron afectadas MASCOTAS");
+			}		
+
+		}
+		dbConnection.commit();
+
+		System.out.println("Done!");
+		} catch (SQLException e) {
+
+			System.out.println(e.getMessage());
+			dbConnection.rollback();
+
+		} finally {
+
+			if (preparedStatementInsertCliente != null) {
+				preparedStatementInsertCliente.close();
+			}
+
+			if (preparedStatementInsertEmail != null) {
+				preparedStatementInsertEmail.close();
+			}
+			if (preparedStatementInsertTelefono != null) {
+				preparedStatementInsertTelefono.close();
+			}
+			if (preparedStatementInsertMascota != null) {
+				preparedStatementInsertMascota.close();
+			}
+
+			if (dbConnection != null) {
+				dbConnection.close();
+			}
+
+		}
+		
+		
 	}
 
 
+ 
 
 
 	public 	ResultSet selectUsuario(String usuario, String password) throws ClassNotFoundException, SQLException {
@@ -185,6 +194,19 @@ public class DBConexion {
 		conn = getConexion();
 		ptm =  conn.prepareStatement(query);
 		ptm.setInt(1, idCT);
+		data = ptm.executeQuery();
+		return data;
+	}
+	
+	public 	ResultSet selectCliente(int idcliente) throws ClassNotFoundException, SQLException {
+		ResultSet data = null;
+		String query= "";
+		query = "SELECT * FROM clientes WHERE idcliente = ? ";
+
+		java.sql.PreparedStatement ptm;
+		conn = getConexion();
+		ptm =  conn.prepareStatement(query);
+		ptm.setInt(1, idcliente);
 		data = ptm.executeQuery();
 		return data;
 	}
@@ -219,6 +241,25 @@ public class DBConexion {
 		data = stmt.executeQuery(query);
 		return data;
 	}
+	
+	public 	ResultSet selectClientes(String nombreCT) throws SQLException{
+		ResultSet data = null;
+		String query= "";
+		query = "SELECT * FROM viajescolombia.clientes INNER JOIN viajescolombia.centrosturisticos ON viajescolombia.centrosturisticos.idCT = viajescolombia.clientes.idCT AND viajescolombia.centrosturisticos.nombre = ?  ";
+		java.sql.PreparedStatement ptmt;
+
+
+		try {
+			conn = getConexion();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ptmt =  conn.prepareStatement(query);
+		ptmt.setString(1, nombreCT);
+		data = ptmt.executeQuery();
+		return data;
+	}
 
 
 	public 	ResultSet selectCentros() throws SQLException{
@@ -239,6 +280,44 @@ public class DBConexion {
 	}
 
 
+	public int deleteCliente(int idCliente) throws SQLException {
+		int data =  0;
+		String queryDelete = "DELETE FROM clientes WHERE clientes.idcliente = ?";
+		java.sql.PreparedStatement ptmt;
+
+		try {
+			conn = getConexion();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ptmt =  conn.prepareStatement(queryDelete);
+		ptmt.setInt(1, idCliente);
+		data = ptmt.executeUpdate();
+		
+		return data;
+	}
+
+	public int updateCliente(int idCliente, int idCT) throws SQLException {
+		//Solo se puede cambiar el centro turistico
+		int data =  0;
+		String queryUpdate = "UPDATE `viajescolombia`.`clientes` SET `idCT` = ? WHERE (`idcliente` = ?)";
+		java.sql.PreparedStatement ptmt;
+
+		try {
+			conn = getConexion();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ptmt =  conn.prepareStatement(queryUpdate);
+		ptmt.setInt(1, idCT);
+		ptmt.setInt(2, idCliente);
+
+		data = ptmt.executeUpdate();
+
+		return data;
+	}
 
 
 

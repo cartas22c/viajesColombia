@@ -12,32 +12,24 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
+import com.modelo.CentroTuristico;
 import com.modelo.Cliente;
 import com.modelo.Modelo;
-import com.sun.org.apache.xml.internal.serialize.Printer;
-
-import sun.print.PrinterJobWrapper;
 
 /**
- * Servlet implementation class AJAXManager
+ * Servlet implementation class AJAXCentros
  */
-
-/**
- * Para el codigo del Servlet con AJAX ---> https://www.w3schools.com/js/js_json_php.asp    [PHP file]
- * */
-
-
-@WebServlet("/AJAXManager")
-public class AJAXManager extends HttpServlet {
+@WebServlet("/AJAXCentros")
+public class AJAXCentros extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
-	public AJAXManager() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public AJAXCentros() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -52,36 +44,15 @@ public class AJAXManager extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		//doGet(request, response);
-
-		/**
-		 * Montamos la respuesta para la peticion AJAX*/
-		// Establecemos o 'avisamos' el tipo de dato que vamos a enviar. JSON. -> Esto sera renderizado por JavaScript
 		response.setContentType("\"Content-Type: application/json; charset=UTF-8\"");
-		// Java no entiende JSON, es necesario una biblioteca externa. GSON   -------->>> Importala!!!
-		// ----------->>   JSON -> GSON -> .class
 		Gson myGson = new Gson();
 		//-----> Recuperamos de la peticion el dato enviado por AJAX en JSON.
 		// -----> Instacimos un objeto PERSONA (java) con los datos del JSON.
 
-		Cliente p = myGson.fromJson(request.getParameter("jsondata"), Cliente.class);
+		CentroTuristico c = myGson.fromJson(request.getParameter("jsondata"), CentroTuristico.class);
 		Modelo m = new Modelo();
-		// Insertamos la persona
 		try {
-			try {
-				m.setCliente(p);
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-
-		// Recuperamos el listado de Personas para renderizarlo despues en la tabla Registros.
-		try {
-			List<Cliente> listadoClientes = m.getClientes();
+			List<Cliente> listadoClientes = m.getClientes(c.getNombre());
 			PrintWriter out = response.getWriter();
 			out.print(myGson.toJson(listadoClientes));
 		} catch (ClassNotFoundException e) {
@@ -91,8 +62,6 @@ public class AJAXManager extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-
 	}
 
 }

@@ -63,6 +63,7 @@ public class UserController extends HttpServlet {
  			}
 			else {
 				//Enviamos a la pagina de inicio
+			 
 				RequestDispatcher view = request.getRequestDispatcher("index.html");
 				view.forward(request, response);
 			}

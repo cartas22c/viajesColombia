@@ -29,7 +29,16 @@ public class Cliente {
 		this.fechaSalida = fechaSalida;
 		this.sexo = sexo;
 		this.centro = centro;
+	}	
+	
+	
+	
+	public Cliente(int idCliente) {
+		super();
+		this.idCliente = idCliente;
 	}
+
+
 
 	public int getIdCliente() {
 		return idCliente;

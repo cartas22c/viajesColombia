@@ -4,7 +4,7 @@
 <html>
 <head>
 <!-- Site made with Mobirise Website Builder v4.8.7, https://mobirise.com -->
-
+<link href="css/admin.css" rel="stylesheet" type="text/css" />
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="generator" content="Mobirise v4.8.7, mobirise.com">
@@ -81,7 +81,11 @@
 								<label class="form-control-label mbr-fonts-style display-7"
 									for="name">Nombre</label> <input type="text"
 									class="form-control" name="name" data-form-field="Name"
-									required id="name">
+									id="name" required="required"> <span
+									style="display:none; color:#fc1751; font-weight:bold;"
+									id="infoNombre">Solo letras y espacios. Debe comenzar
+									por mayuscula</span>
+
 							</div>
 						</div>
 						<div class="col-md-4 multi-horizontal" data-for="primerApellido">
@@ -89,7 +93,10 @@
 								<label class="form-control-label mbr-fonts-style display-7"
 									for="primerApellido">Primer Apellido</label> <input type="text"
 									class="form-control" name="primerApellido"
-									data-form-field="primerApellido" required id="primerApellido">
+									data-form-field="primerApellido" id="primerApellido"
+									required="required"> <span style="display:none; color:#fc1751; font-weight:bold;" id="infoApellido1">Solo
+									letras y espacios. Debe comenzar por mayuscula</span>
+
 							</div>
 						</div>
 						<div class="col-md-4 multi-horizontal" data-for="segundoApellido">
@@ -97,7 +104,10 @@
 								<label class="form-control-label mbr-fonts-style display-7"
 									for="segundoApellido">Segundo Apellido</label> <input
 									type="text" class="form-control" name="segundoApellido"
-									data-form-field="segundoApellido" required id="segundoApellido">
+									data-form-field="segundoApellido" id="segundoApellido">
+								<span style="display:none; color:#fc1751; font-weight:bold;" id="infoApellido2">Solo letras y espacios. Debe
+									comenzar por mayuscula</span>
+
 							</div>
 						</div>
 						<div class="col-md-4 multi-horizontal" data-for="email">
@@ -105,7 +115,7 @@
 								<label class="form-control-label mbr-fonts-style display-7"
 									for="email">Email</label> <input type="text"
 									class="form-control" name="email" data-form-field="email"
-									required id="email">
+									required="required" id="email">
 							</div>
 						</div>
 
@@ -114,61 +124,7 @@
 								<label class="form-control-label mbr-fonts-style display-7"
 									for="phone-form1-b">Phone</label> <input type="text"
 									class="form-control" name="phone" data-form-field="Phone"
-									id="phone-form1-b">
-							</div>
-						</div>
-
- 
-							<div class="col-md-2 multi-horizontal" data-for="sexo">
-								<div class="form-group">
-									<label class="form-control-label mbr-fonts-style display-7"
-										for="hombre">Hombre</label> <input type="radio"
-										class="form-control" data-form-field="sexo" required
-										name="sexo" value="H" id="hombre">
-								</div>
-							</div>
-
-
-							<div class="col-md-2 multi-horizontal" data-for="sexo">
-								<div class="form-group">
-									<label class="form-control-label mbr-fonts-style display-7"
-										for="mujer">Mujer</label> <input type="radio"
-										class="form-control" data-form-field="sexo" required
-										name="sexo" value="M" id="mujer">
-								</div>
-							</div>
-						</div>
-					 
-
-
-						<div class="col-md-4 multi-horizontal" data-for="fechaEntrada">
-							<div class="form-group">
-								<label class="form-control-label mbr-fonts-style display-7"
-									for="fechaEntrada">Fecha Entrada</label> <input type="date"
-									class="form-control" name="fechaEntrada"
-									data-form-field="fechaEntrada" required id="fechaEntrada">
-							</div>
-						</div>
-
-						<div class="col-md-4 multi-horizontal" data-for="fechaSalida">
-							<div class="form-group">
-								<label class="form-control-label mbr-fonts-style display-7"
-									for="fechaSalida">Fecha Salida</label> <input type="date"
-									class="form-control" name="fechaSalida"
-									data-form-field="fechaSalida" required id="fechaSalida">
-							</div>
-						</div>
-
-						<div class="col-md-3 multi-horizontal" data-for="sexo">
-							<div class="form-group">
-								<jsp:useBean id="m" class="com.modelo.Modelo"></jsp:useBean>
-								<label class="form-control-label mbr-fonts-style display-7"
-									for="cts">Seleccione Centro</label> </br> <select id="cts">
-									<option></option>
-									<c:forEach items="${m.centros}" var="centro">
-										<option value="${centro.nombre}">${centro.nombre}</option>
-									</c:forEach>
-								</select>
+									id="phone-form1-b" required="required">
 							</div>
 						</div>
 
@@ -176,28 +132,86 @@
 						<div class="col-md-2 multi-horizontal" data-for="sexo">
 							<div class="form-group">
 								<label class="form-control-label mbr-fonts-style display-7"
-									for="mascota">Tiene mascota?</label> <input type="checkbox"
-									id="mascota" name="mascota">
-								<div id="contenedorMascotas">
-									<label class="form-control-label mbr-fonts-style display-7"
-										for="mascotas">Mascotas:</label> <select id="mascotas"
-										multiple>
-										<option value="Perro">Perro</option>
-										<option value="Gato">Gato</option>
-										<option value="O">Otro tipo</option>
-									</select>
-								</div>
-								<div id="descripcionMascota">
-									<h4>Describa su mascota</h4>
-									<textarea>
-                        
-                                   </textarea>
-								</div>
+									for="hombre">Hombre</label> <input type="radio"
+									class="form-control" data-form-field="sexo" name="sexo"
+									value="H" id="hombre">
 							</div>
 						</div>
- 
 
-					<input type="submit"
+
+						<div class="col-md-2 multi-horizontal" data-for="sexo">
+							<div class="form-group">
+								<label class="form-control-label mbr-fonts-style display-7"
+									for="mujer">Mujer</label> <input type="radio"
+									class="form-control" data-form-field="sexo" name="sexo"
+									value="M" id="mujer">
+							</div>
+						</div>
+					</div>
+
+
+
+					<div class="col-md-4 multi-horizontal" data-for="fechaEntrada">
+						<div class="form-group">
+							<label class="form-control-label mbr-fonts-style display-7"
+								for="fechaEntrada">Fecha Entrada</label> <input type="date"
+								class="form-control" name="fechaEntrada"
+								data-form-field="fechaEntrada" required="required"
+								id="fechaEntrada"> <span style="display:none; color:#fc1751; font-weight:bold;"  id="infoFechaEntrada">La
+								fecha de Entrada no puede ser menor que la fecha actual</span>
+
+						</div>
+					</div>
+
+					<div class="col-md-4 multi-horizontal" data-for="fechaSalida">
+						<div class="form-group">
+							<label class="form-control-label mbr-fonts-style display-7"
+								for="fechaSalida">Fecha Salida</label> <input type="date"
+								class="form-control" name="fechaSalida"
+								data-form-field="fechaSalida" required="required"
+								id="fechaSalida"> <span style="display:none; color:#fc1751; font-weight:bold;" id="infoFechaSalida">La
+								fecha de Salida no puede ser menor que la fecha de Entrada</span>
+
+						</div>
+					</div>
+
+					<div class="col-md-3 multi-horizontal" data-for="sexo">
+						<div class="form-group">
+							<jsp:useBean id="m" class="com.modelo.Modelo"></jsp:useBean>
+							<label class="form-control-label mbr-fonts-style display-7"
+								for="cts">Seleccione Centro</label> </br> <select id="cts">
+								<option></option>
+								<c:forEach items="${m.centros}" var="centro">
+									<option value="${centro.nombre}">${centro.nombre}</option>
+								</c:forEach>
+							</select>
+						</div>
+					</div>
+
+
+					<div class="col-md-2 multi-horizontal" data-for="sexo">
+						<div class="form-group">
+							<label class="form-control-label mbr-fonts-style display-7"
+								for="mascota">Tiene mascota?</label> <input type="checkbox"
+								id="mascota" name="mascota">
+							<div id="contenedorMascotas">
+								<label class="form-control-label mbr-fonts-style display-7"
+									for="mascotas">Mascotas:</label> <select id="mascotas" multiple>
+									<option value="Perro">Perro</option>
+									<option value="Gato">Gato</option>
+									<option value="O">Otro tipo</option>
+								</select>
+							</div>
+							<div id="descripcionMascota">
+								<h4>Describa su mascota</h4>
+								<input type="text" id="txtareamascotas">
+
+							</div>
+						</div>
+					</div>
+
+
+					<input type="button"
 						class="btn btn-md btn-secondary-outline display-4" id="registrar"
 						name="registar" value="Registar">
 				</form>
@@ -205,40 +219,73 @@
 		</div>
 	</div>
 
-	<section class="section-table cid-r9300cw1CI" id="table1-a">
+	<br>
+	<div class="container scroll">
+		<table class="table isSearch" cellspacing="0">
+			<thead>
+				<tr class="table-heads ">
 
-		<div class="container container-table">
+					<th class="head-item mbr-fonts-style display-7">CLIENTE</th>
+					<th class="head-item mbr-fonts-style display-7">PRIMER
+						APELLIDO</th>
+					<th class="head-item mbr-fonts-style display-7">SEGUNDO
+						APELLIDO</th>
+					<th class="head-item mbr-fonts-style display-7">FECHA ENTRADA</th>
+					<th class="head-item mbr-fonts-style display-7">FECHA SALIDA</th>
+					<th class="head-item mbr-fonts-style display-7">CENTRO
+						TURISTICO</th>
+					<th class="head-item mbr-fonts-style display-10"></th>
+					<th class="head-item mbr-fonts-style display-10"></th>
+			</thead>
 
-			<div class="table-wrapper">
+			<tbody id="t1">
+				<jsp:useBean id="m2" class="com.modelo.Modelo"></jsp:useBean>
 
-				<div class="container scroll">
+				<c:forEach items="${m2.clientes}" var="cliente">
+					<tr>
 
-					<table class="table isSearch" cellspacing="0">
-						<thead>
-							<tr class="table-heads ">
+						<td class="body-item mbr-fonts-style display-7"><c:out
+								value="${cliente.nombre}" /></td>
+						<td class="body-item mbr-fonts-style display-7"><c:out
+								value="${cliente.primerApellido}" /></td>
+						<td class="body-item mbr-fonts-style display-7"><c:out
+								value="${cliente.segundoApellido}" /></td>
+						<td class="body-item mbr-fonts-style display-7"><c:out
+								value="${cliente.fechaEntrada}" /></td>
+						<td class="body-item mbr-fonts-style display-7"><c:out
+								value="${cliente.fechaSalida}" /></td>
+						<td class="body-item mbr-fonts-style display-7"><c:out
+								value="${cliente.centro}" /></td>
+						<td><input type='button'
+							class='btn btn-md btn-secondary-outline display-'
+							id="${cliente.idCliente}" name="${cliente.idCliente}" value='X'
+							onclick="myDelete(this.id)"></td>
 
-								<th class="head-item mbr-fonts-style display-7">CLIENTE</th>
-								<th class="head-item mbr-fonts-style display-7">PRIMER
-									APELLIDO</th>
-								<th class="head-item mbr-fonts-style display-7">SEGUNDO
-									APELLIDO</th>
-								<th class="head-item mbr-fonts-style display-7">FECHA
-									ENTRADA</th>
-								<th class="head-item mbr-fonts-style display-7">FECHA
-									SALIDA</th>
-								<th class="head-item mbr-fonts-style display-7">CENTRO
-									TURISTICO</th>
-							</tr>
-						</thead>
+					</tr>
 
-						<tbody id="t1">
+				</c:forEach>
+			</tbody>
+		</table>
+	</div>
 
-						</tbody>
-					</table>
-				</div>
+	<div class="container">
+		<h2>Lista No ordenada Clientes</h2>
+		<div class="col-md-3 multi-horizontal" data-for="sexo">
+			<div class="form-group">
+				<jsp:useBean id="m1" class="com.modelo.Modelo"></jsp:useBean>
+				<label class="form-control-label mbr-fonts-style display-7"
+					for="ctslista">Seleccione Centro</label> </br> <select id="ctslista">
+					<option></option>
+					<c:forEach items="${m1.centros}" var="centro">
+						<option value="${centro.nombre}">${centro.nombre}</option>
+					</c:forEach>
+				</select>
 			</div>
 		</div>
-	</section>
+		<ul class="list-group" id="listano">
+
+		</ul>
+	</div>
 
 
 	<script type="text/javascript" src="js/admin.js"></script>

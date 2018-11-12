@@ -47,6 +47,7 @@ public class ReservasController extends HttpServlet {
 		}
 		// Si es ADMINISTRADOR
 		else {
+			request.setAttribute("usuario", currentUser);
 			request.getRequestDispatcher("/adminReservas.jsp").forward(request, response);
 
 		}
