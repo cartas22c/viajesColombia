@@ -32,13 +32,6 @@ public class Modelo {
 	}
 
 
-	public Modelo(Usuario usuario) {
-		super();
-		this.usuario = usuario;
-	}
-
-
-
 	public Usuario getUsuario() throws ClassNotFoundException, SQLException {
 		DBConexion myConexion = new DBConexion("scartas", "Temp2018$$");
 		ResultSet data = null;

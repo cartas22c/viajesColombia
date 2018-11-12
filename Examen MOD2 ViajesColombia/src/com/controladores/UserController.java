@@ -48,8 +48,9 @@ public class UserController extends HttpServlet {
 		String usuario = request.getParameter("user");
 		String password = request.getParameter("pwd");
 		
-		Modelo m = new Modelo(new Usuario(usuario, password));
-
+		Modelo m = new Modelo();
+		m.setUsuario(new Usuario(usuario, password));
+		
 		try {
 			if(m.getUsuario() != null) {
 				// El usuario EXISTE en BBDD
