@@ -1,6 +1,7 @@
 package com.modelo;
 
 import java.util.Date;
+import java.util.List;
 
 public class Cliente {
 
@@ -10,15 +11,15 @@ public class Cliente {
 	private String segundoApellido;
 	private Date fechaEntrada;
 	private Date fechaSalida;
-	private Sexo sexo;
-	private int idCT;
+	private String sexo;
+	private String centro;
+	private List<String> email;
+	private List<String> mascotas;
+	private List<String> telefonos;
 	
-	enum Sexo{
-		Hombre, Mujer
-	}
-
+	
 	public Cliente(int idCliente, String nombre, String primerApellido, String segundoApellido, Date fechaEntrada,
-			Date fechaSalida, Sexo sexo, int idCT) {
+			Date fechaSalida, String sexo, String centro) {
 		super();
 		this.idCliente = idCliente;
 		this.nombre = nombre;
@@ -27,8 +28,17 @@ public class Cliente {
 		this.fechaEntrada = fechaEntrada;
 		this.fechaSalida = fechaSalida;
 		this.sexo = sexo;
-		this.idCT = idCT;
+		this.centro = centro;
+	}	
+	
+	
+	
+	public Cliente(int idCliente) {
+		super();
+		this.idCliente = idCliente;
 	}
+
+
 
 	public int getIdCliente() {
 		return idCliente;
@@ -78,20 +88,45 @@ public class Cliente {
 		this.fechaSalida = fechaSalida;
 	}
 
-	public Sexo getSexo() {
+	public String getSexo() {
 		return sexo;
 	}
 
-	public void setSexo(Sexo sexo) {
+	public void setSexo(String sexo) {
 		this.sexo = sexo;
 	}
 
-	public int getIdCT() {
-		return idCT;
+	public String getCentro() {
+		return centro;
 	}
 
-	public void setIdCT(int idCT) {
-		this.idCT = idCT;
+	public void setCentro(String centro) {
+		this.centro = centro;
+	}
+
+	public List<String> getEmail() {
+		return email;
+	}
+
+	public void setEmail(List<String> email) {
+		this.email = email;
+	}
+
+	public List<String> getMascotas() {
+		return mascotas;
+	}
+
+	public void setMascotas(List<String> mascotas) {
+		this.mascotas = mascotas;
+	}
+
+	public List<String> getTelefonos() {
+		
+		return telefonos;
+	}
+
+	public void setTelefonos(List<String> telefonos) {
+		this.telefonos = telefonos;
 	}
 
  

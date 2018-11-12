@@ -1,30 +1,32 @@
 package com.controladores;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.List;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
+import com.google.gson.Gson;
+import com.modelo.CentroTuristico;
+import com.modelo.Cliente;
 import com.modelo.Modelo;
-import com.modelo.Usuario;
 
 /**
- * Servlet implementation class UserController
+ * Servlet implementation class AJAXCentros
  */
-@WebServlet("/UserController")
-public class UserController extends HttpServlet {
+@WebServlet("/AJAXCentros")
+public class AJAXCentros extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public UserController() {
+    public AJAXCentros() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -42,32 +44,17 @@ public class UserController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		doGet(request, response);
-		response.setContentType("text/html;charset=UTF-8");
-		
-		String usuario = request.getParameter("user");
-		String password = request.getParameter("pwd");
-		
+		response.setContentType("\"Content-Type: application/json; charset=UTF-8\"");
+		Gson myGson = new Gson();
+		//-----> Recuperamos de la peticion el dato enviado por AJAX en JSON.
+		// -----> Instacimos un objeto PERSONA (java) con los datos del JSON.
+
+		CentroTuristico c = myGson.fromJson(request.getParameter("jsondata"), CentroTuristico.class);
 		Modelo m = new Modelo();
-		m.setUsuario(new Usuario(usuario, password));
-		
 		try {
-			if(m.getUsuario() != null) {
-				// El usuario EXISTE en BBDD
-				System.out.println("El usuario existe!");
-				
-				// Metemos el usuario en Sesion!
-				HttpSession session = request.getSession();
-				session.setAttribute("currentUser", m.getUsuario());
-				// Envio al controlador Principal para validar el nivel de user
-				response.sendRedirect("ReservasController");
- 			}
-			else {
-				//Enviamos a la pagina de inicio
-			 
-				RequestDispatcher view = request.getRequestDispatcher("index.html");
-				view.forward(request, response);
-			}
+			List<Cliente> listadoClientes = m.getClientes(c.getNombre());
+			PrintWriter out = response.getWriter();
+			out.print(myGson.toJson(listadoClientes));
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -75,9 +62,6 @@ public class UserController extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-
-		
 	}
 
 }
