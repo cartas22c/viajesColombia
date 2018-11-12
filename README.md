@@ -33,8 +33,8 @@ Si el usuario es del nivel 2 sera un usuario tipo administrador por lo que tendr
 | admin | admin |2 |
 
 Esto se realiza mendiante el uso del concepto Sesion.
-HttpSession session = request.getSession();
-session.setAttribute("currentUser", m.getUsuario());
+`HttpSession session = request.getSession();`
+`session.setAttribute("currentUser", m.getUsuario());`
 
 ## Administracion de Reservas
 
